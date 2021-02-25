@@ -3,6 +3,7 @@ package com.emp.management.employeemanagement.controller;
 import com.emp.management.employeemanagement.model.Employee;
 import com.emp.management.employeemanagement.model.EmployeeEvents;
 import com.emp.management.employeemanagement.model.EmployeeStates;
+import com.emp.management.employeemanagement.response.SuccessResponse;
 import com.emp.management.employeemanagement.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class EmployeeController {
             employe.setStatus(EmployeeStates.ADDED);
             employe.setEmployeeEmail(emp.getEmployeeEmail());
 
-            employeeService.savOrUpdateEmployee(employe);
-            return new ResponseEntity<>(employe,HttpStatus.OK);
+            Employee savedemployee=employeeService.savOrUpdateEmployee(employe);
+           return  ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse(savedemployee,"Employee created successfully"));
         }
         else {
             return new ResponseEntity<>("Employee with email already exists",HttpStatus.CONFLICT);
@@ -41,7 +42,7 @@ public class EmployeeController {
             Optional<Employee> optEmp=employeeService.findByEmailId(emp.getEmployeeEmail());
 
             employeeService.updateStatus(optEmp.get().getEmployeeId(),status);
-            return new ResponseEntity<>("Status updated successfully",HttpStatus.OK);
+            return  ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("","Status updated successfully"));
         }
         else {
             return new ResponseEntity<>("Employee with email not found",HttpStatus.CONFLICT);
